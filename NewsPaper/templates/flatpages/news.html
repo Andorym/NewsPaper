@@ -1,0 +1,31 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+<h1>Последние новости</h1>
+<h3>{{ time_now|date: 'M d Y'}}</h3>
+{{ post }}
+<hr> 
+{% if news %}
+    <table>
+        <tr>
+            <td>Заголовок</td>
+            <td>Текст</td>
+            <td>Категория</td>
+            <td>Дата публикации</td>
+        </tr>
+        {% for post in news %}
+        <tr>
+            <td><a href="{% url 'news_detail' post.pk %}">{{ post.post_header }}</a></td>
+            <td align="left">{{ post.post_body|censor|preview }}</td>
+            <td>{{ post.category.name|censor }}</td>
+            <td> {{ post.input_date_time|date:'D.M.Y h:m' }} </td>
+        </tr>
+            {% endfor %}
+     </table>/>
+{% endblock content %}
