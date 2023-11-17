@@ -9,6 +9,10 @@
 {% block content %}
 <h1>Последние новости</h1>
 <h3>{{ time_now|date: 'M d Y'}}</h3>
+<form action="" method="get">
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Найти" />
+</form>
 {{ post }}
 <hr> 
 {% if news %}
@@ -28,4 +32,9 @@
         </tr>
             {% endfor %}
      </table>/>
+{% if page_obj.has_previous %}
+<a href="?{% url_replace page=1 %}">1</a>
+{% if page_obj.previous_page_number != 1 %}
+<a href="?{% url_replace_page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
 {% endblock content %}
