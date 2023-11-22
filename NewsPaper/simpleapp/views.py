@@ -6,6 +6,10 @@ from NewsPaper.simpleapp.filters import PostFilter
 from NewsPaper.simpleapp.forms import PostForm
 from .models import Post
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class PostList(ListView):
@@ -44,6 +48,7 @@ class PostDetail(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
+@method_decorator(login_required, name='dispath')
 class PostCreate(CreateView):
     form_class = PostForm
     model = Post
@@ -57,9 +62,9 @@ class PostCreate(CreateView):
         category_object_name = str(a[0])
         addpost.send(Post, instance=post, category=category_object_name)
         return super().form_valid(form)
-
-
-class PostUpdate(UpdateView):
+    
+ 
+class PostUpdate(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -69,8 +74,12 @@ class PostUpdate(UpdateView):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
+   
 
+@method_decorator(login_required, name='dispath')
 class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
+
+   
