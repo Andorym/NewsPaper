@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>Подписка</title>
+</head>
+<body>
+    <h1>Новостной блок</h1>
+    <hr />
+    <h2>{{ user.username }}</h2>
+    {% <p>Вы подписались на рассылку новостей из категории: {{ catgeroty.name }}.</p> %}
+    {% <a href=" http://127.0.0.1:8000/{% url 'news:category_detail.pk' %}">Новости из раздела</a> %}
+    <p>{{subscriber.massage|tuncatechars:50 }}</p>
+</body>
+</html>

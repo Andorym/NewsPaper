@@ -44,6 +44,13 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 
+EMAIL_HOST = 'smpt.mail.ru'
+EMAIL_PORT ='465'
+EMAIL_HOST_USER = 'andorym@mail.ru'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_SSL = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,7 +73,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'news.apps.SubscribersConfig',
+    'django_apscheduler'
  ]
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 SITE_ID = 1
 

@@ -32,6 +32,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name_category = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User, blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)

@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+News category
+{% endblock title %}
+
+{% block content %}
+<h1> Категории новостей </h1>
+<div>
+    {% for category in categories %}
+    <a href="{% url 'news:catgory_detail' category.pk %}" class="btn-primary btn-lg">{{ category.name }}</a>
+    {% if user in category.subscribers.filter %}
+    <button tipe="button" class="btn-lg btn-info btn-sm" disabled>Подписка оформлена</button>
+    {% endif %}
+    <br />
+    <p class="card-text"> Подписчиков: {{ category.subscribers.count }}</p>
+    {% if user not in category.subscribers.filter %}
+    <a href="{% url 'news:subscribe' category.pk %}" class="btn btn-primary btn-sm">Подписаться</a>
+    {% else %}
+    <a href="{% url 'news:unsubscribe' category.pk %}" class="btn btn-secondary btn-sm">Отписаться</a>
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock content %}
