@@ -12,8 +12,9 @@ from django.template.loader import render_to_string
 from django.db.models.signals import post_save
 from django.core.mail import mail_managers
 from django.dispatch import receiver
+from django.views.decorators.cache import cache_page
 
-
+@cache_page(60 * 15)
 class CategoryView(View):
      model = Category
      template_name = 'flatpages/category_list.html'
@@ -45,4 +46,6 @@ def subscribe_to(request, pk):
             from_email=DEFAULT_FROM_EMAIL,
             to=[email]
             )
+
+
 

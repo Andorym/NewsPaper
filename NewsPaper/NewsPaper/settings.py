@@ -91,6 +91,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'NewsPaper.urls'
@@ -170,4 +173,113 @@ CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json
+CELERY_RESULT_SERIALIZER = 'json'
+
+CACHES = {
+    'default': {
+        'TIMEOUT': 300,
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR,'cache_files'),
+        }
+    }
+#Логирование
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standart': {
+            'format': '{asctime} :: {levelname} -- {module} : {message}',
+            'style': '{',
+            },
+        'forinfo': {
+            'format': '{asctime} :: {levelname} -- {module} : {message}',
+            'style': '{',
+            },
+        'forwarning': {
+            'format': '{asctime} :: {levelname} -- {pathname} : {message}',
+            'style': '{',
+            },
+        'forerror': {
+            'format': '{asctime} :: {levelname} -- {pathname} / {exc_info} : {message}',
+            'style': '{',
+            },
+        'security': {
+            'format': '{asctime} :: {levelname} -- {module} : {message}',
+            'style': '{',
+            },
+    },
+    'filters':{
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+            },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+            },
+        },
+    'handlers': {
+        'general': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filters': ['require_debug_false'],
+            'filename': 'general.log',
+            'formatter': 'standart',
+            },
+        'errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHadler',
+            'filename': 'errors.log',
+            'formatter': 'forerror',
+            },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'errors.log',
+            'formatter': 'forerror',
+            },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'forwarning',
+            },
+        'security': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+            'formatter': 'forwarning',
+            },
+        },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'general'],
+            'level': 'DEBUG',
+            'propagate': True,
+            },
+        'django.request':{
+            'handlers': ['errors', 'mail_admins', 'general'],
+            'level': 'ERROR',
+            'propagate': True,
+            },
+        'django_server':{
+            'handlers': ['error', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+            },
+        'django.template': {
+            'handlers': ['errors'],
+            'level': 'ERROR',
+            'propagate': True,
+            },
+        'django.db.backends': {
+            'handlers': ['errors'],
+            'level': 'ERROR',
+            'propagate': True,
+            },
+        'django.security.*': {
+            'handlers': ['security'],
+            'level': 'INFO',
+            'propagate': True,
+            },
+        },
+}
